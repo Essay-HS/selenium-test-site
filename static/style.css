@@ -81,13 +81,57 @@ select {
 }
 
 .brand-mark {
-    width: 38px;
-    height: 38px;
-    display: grid;
-    place-items: center;
-    border-radius: 11px;
-    background: linear-gradient(135deg, #4d7cff, #2855d9);
-    box-shadow: 0 8px 20px rgba(40, 85, 217, 0.35);
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+    display: block;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow:
+        0 10px 24px rgba(40, 85, 217, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.brand-mark svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.brand-logo-background {
+    fill: url("#brand-gradient");
+}
+
+.brand-logo-s {
+    fill: none;
+    stroke: #ffffff;
+    stroke-width: 3.25;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.brand-logo-check {
+    fill: none;
+    stroke: #74f0bd;
+    stroke-width: 2.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.brand:hover .brand-mark {
+    transform: translateY(-1px);
+    box-shadow:
+        0 14px 30px rgba(40, 85, 217, 0.38),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.brand-text {
+    font-size: 1rem;
+    font-weight: 750;
+    letter-spacing: -0.015em;
 }
 
 .brand-text {
