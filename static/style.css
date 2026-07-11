@@ -598,3 +598,234 @@ input[type="radio"] {
         padding: 24px;
     }
 }
+
+/* Result page */
+
+.result-page,
+.submissions-page {
+    padding-top: 72px;
+    padding-bottom: 80px;
+}
+
+.page-heading {
+    max-width: 760px;
+    margin-bottom: 36px;
+}
+
+.page-heading h1 {
+    margin: 10px 0 14px;
+    font-size: clamp(2.25rem, 5vw, 4rem);
+    line-height: 1.05;
+    letter-spacing: -0.045em;
+    color: #172033;
+}
+
+.page-description {
+    max-width: 680px;
+    margin: 0;
+    color: #667085;
+    font-size: 1.08rem;
+    line-height: 1.7;
+}
+
+.result-card {
+    max-width: 820px;
+    padding: 34px;
+    background: #ffffff;
+    border: 1px solid #dfe5ef;
+    border-radius: 22px;
+    box-shadow: 0 18px 45px rgba(22, 34, 55, 0.09);
+}
+
+.result-card-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    align-items: flex-start;
+    padding-bottom: 26px;
+    border-bottom: 1px solid #e6eaf0;
+}
+
+.result-card-header h2 {
+    margin: 5px 0 0;
+    color: #172033;
+    font-size: 1.6rem;
+}
+
+.result-label {
+    margin: 0;
+    color: #667085;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.success-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 13px;
+    border-radius: 999px;
+    background: #dff8ed;
+    color: #087a55;
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+
+.result-list {
+    margin-top: 8px;
+}
+
+.result-row {
+    display: grid;
+    grid-template-columns: minmax(140px, 0.8fr) minmax(0, 1.4fr);
+    gap: 24px;
+    padding: 19px 0;
+    border-bottom: 1px solid #e6eaf0;
+}
+
+.result-row span {
+    color: #667085;
+}
+
+.result-row strong {
+    color: #172033;
+    overflow-wrap: anywhere;
+}
+
+.result-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 28px;
+}
+
+/* Submissions page */
+
+.submissions-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 20px;
+}
+
+.submissions-toolbar > div {
+    color: #667085;
+    font-weight: 600;
+}
+
+.record-count {
+    color: #172033;
+    font-size: 1.3rem;
+    font-weight: 800;
+}
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    background: #ffffff;
+    border: 1px solid #dfe5ef;
+    border-radius: 18px;
+    box-shadow: 0 14px 35px rgba(22, 34, 55, 0.07);
+}
+
+.submissions-table {
+    width: 100%;
+    min-width: 1000px;
+    border-collapse: collapse;
+}
+
+.submissions-table th,
+.submissions-table td {
+    padding: 17px 18px;
+    text-align: left;
+    border-bottom: 1px solid #e6eaf0;
+    vertical-align: middle;
+}
+
+.submissions-table th {
+    background: #f6f8fc;
+    color: #667085;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.submissions-table td {
+    color: #344054;
+    font-size: 0.94rem;
+}
+
+.submissions-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.submissions-table tbody tr:hover {
+    background: #f9fbff;
+}
+
+.status-pill {
+    display: inline-flex;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.status-pill.yes {
+    background: #dff8ed;
+    color: #087a55;
+}
+
+.status-pill.no {
+    background: #f1f3f7;
+    color: #667085;
+}
+
+.empty-state {
+    padding: 60px 30px;
+    text-align: center;
+    background: #ffffff;
+    border: 1px solid #dfe5ef;
+    border-radius: 18px;
+}
+
+.empty-state h2 {
+    margin-top: 0;
+    color: #172033;
+}
+
+.empty-state p {
+    margin-bottom: 26px;
+    color: #667085;
+}
+
+@media (max-width: 700px) {
+    .result-page,
+    .submissions-page {
+        padding-top: 44px;
+    }
+
+    .result-card {
+        padding: 24px;
+    }
+
+    .result-card-header,
+    .submissions-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .result-row {
+        grid-template-columns: 1fr;
+        gap: 7px;
+    }
+
+    .result-actions a,
+    .submissions-toolbar a {
+        width: 100%;
+        text-align: center;
+    }
+}

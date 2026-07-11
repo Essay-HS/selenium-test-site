@@ -2,13 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Form Result</title>
+    <title>Form Submission Result</title>
 
     <link
         rel="stylesheet"
@@ -17,49 +16,101 @@
 </head>
 
 <body>
-    <header>
-        <h1>Form Submission Result</h1>
+    <header class="site-header">
+        <div class="nav-container">
+            <a class="brand" href="{{ url_for('home') }}">
+                <span class="brand-mark">S</span>
+                <span>Selley QA Lab</span>
+            </a>
 
-        <nav>
-            <a href="/">Home</a>
-            <a href="/login">Login Test</a>
-            <a href="/form">Form Test</a>
-        </nav>
+            <nav class="main-nav" aria-label="Main navigation">
+                <a href="{{ url_for('home') }}">Home</a>
+                <a href="{{ url_for('login') }}">Login Test</a>
+                <a href="{{ url_for('form') }}">Form Test</a>
+                <a href="{{ url_for('submissions') }}">
+                    Submissions
+                </a>
+            </nav>
+        </div>
     </header>
 
-    <main class="container">
-        <section id="submission-result" class="card">
-            <p>
-                <strong>Name:</strong>
-                <span id="result-name">{{ name }}</span>
-            </p>
+    <main class="page-shell">
+        <section class="page-container result-page">
+            <div class="page-heading">
+                <p class="eyebrow">DATABASE WORKFLOW</p>
 
-            <p>
-                <strong>Email:</strong>
-                <span id="result-email">{{ email }}</span>
-            </p>
+                <h1>Submission saved successfully</h1>
 
-            <p>
-                <strong>Role:</strong>
-                <span id="result-role">{{ role }}</span>
-            </p>
+                <p class="page-description">
+                    The form was processed by Flask and stored in
+                    the MySQL database.
+                </p>
+            </div>
 
-            <p>
-                <strong>Experience:</strong>
-                <span id="result-experience">{{ experience }}</span>
-            </p>
+            <section class="result-card">
+                <div class="result-card-header">
+                    <div>
+                        <p class="result-label">Submission status</p>
+                        <h2>Record created</h2>
+                    </div>
 
-            <p>
-                <strong>Newsletter:</strong>
-                <span id="result-newsletter">
-                    {{ "Yes" if newsletter else "No" }}
-                </span>
-            </p>
+                    <span class="success-badge">
+                        Saved
+                    </span>
+                </div>
+
+                <div class="result-list">
+                    <div class="result-row">
+                        <span>Name</span>
+                        <strong id="result-name">{{ name }}</strong>
+                    </div>
+
+                    <div class="result-row">
+                        <span>Email</span>
+                        <strong id="result-email">{{ email }}</strong>
+                    </div>
+
+                    <div class="result-row">
+                        <span>Career role</span>
+                        <strong id="result-role">{{ role }}</strong>
+                    </div>
+
+                    <div class="result-row">
+                        <span>Experience</span>
+                        <strong id="result-experience">
+                            {{ experience }}
+                        </strong>
+                    </div>
+
+                    <div class="result-row">
+                        <span>Newsletter</span>
+                        <strong id="result-newsletter">
+                            {% if newsletter %}
+                                Yes
+                            {% else %}
+                                No
+                            {% endif %}
+                        </strong>
+                    </div>
+                </div>
+
+                <div class="result-actions">
+                    <a
+                        class="primary-button"
+                        href="{{ url_for('form') }}"
+                    >
+                        Submit Another Record
+                    </a>
+
+                    <a
+                        class="secondary-button"
+                        href="{{ url_for('submissions') }}"
+                    >
+                        View Saved Records
+                    </a>
+                </div>
+            </section>
         </section>
-
-        <a id="return-to-form" href="/form">
-            Return to Form
-        </a>
     </main>
 </body>
 </html>
