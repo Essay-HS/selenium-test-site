@@ -873,3 +873,22 @@ input[type="radio"] {
         text-align: center;
     }
 }
+
+.form-group textarea {
+    width: 100%;
+    min-height: 180px;
+    padding: 14px 16px;
+    border: 1px solid #cfd7e6;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #172033;
+    font: inherit;
+    line-height: 1.5;
+    resize: vertical;
+}
+
+.form-group textarea:focus {
+    outline: none;
+    border-color: #2f5be7;
+    box-shadow: 0 0 0 3px rgba(47, 91, 231, 0.14);
+}
