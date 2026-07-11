@@ -1,10 +1,12 @@
 import os
 import time
+from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.request import urlopen
 
 import pytest
 from selenium import webdriver
+from selenium.webdriver.firefox.options import Options
 
 
 @pytest.fixture(scope="session")
@@ -12,8 +14,8 @@ def base_url():
     """
     Return the website address used by the entire test session.
 
-    The BASE_URL environment variable can point the tests to the
-    public website. If it is not supplied, tests use the local site.
+    BASE_URL can point the tests to the public website.
+    If BASE_URL is not supplied, the tests use the local site.
     """
     return os.getenv(
         "BASE_URL",
@@ -24,9 +26,9 @@ def base_url():
 @pytest.fixture(scope="session", autouse=True)
 def wait_for_site(base_url):
     """
-    Wait for the real Flask homepage before starting Selenium tests.
+    Wait until the Flask website is ready before tests begin.
 
-    This handles Render's cold-start loading page.
+    The live Render site can take longer to start after inactivity.
     """
     is_live_site = not (
         "127.0.0.1" in base_url
@@ -81,15 +83,13 @@ def wait_for_site(base_url):
     )
 
 
-import os
-
-import pytest
-from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
-
-
 @pytest.fixture
 def driver():
+    """
+    Create a Firefox browser for each Selenium test.
+
+    Set HEADLESS=true when the browser should run without appearing.
+    """
     options = Options()
 
     if os.getenv("HEADLESS", "false").lower() == "true":
@@ -102,3 +102,34 @@ def driver():
     yield browser
 
     browser.quit()
+
+
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    """
+    Save a browser screenshot when a Selenium test fails.
+    """
+    outcome = yield
+    report = outcome.get_result()
+
+    if report.when != "call" or not report.failed:
+        return
+
+    driver = item.funcargs.get("driver")
+
+    if driver is None:
+        return
+
+    screenshot_folder = Path("test-results/screenshots")
+    screenshot_folder.mkdir(parents=True, exist_ok=True)
+
+    safe_test_name = item.nodeid.replace("/", "_").replace("::", "__")
+    safe_test_name = safe_test_name.replace("[", "_").replace("]", "")
+
+    screenshot_path = screenshot_folder / f"{safe_test_name}.png"
+
+    try:
+        driver.save_screenshot(str(screenshot_path))
+        print(f"\nFailure screenshot saved: {screenshot_path}")
+    except Exception as error:
+        print(f"\nCould not save failure screenshot: {error}")
