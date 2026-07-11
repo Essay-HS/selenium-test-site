@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Selley Selenium Test Site</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+</head>
+
+<body>
+    <header>
+        <h1 id="page-title">Selley Selenium Test Site</h1>
+
+        <nav>
+            <a id="home-link" href="/">Home</a>
+            <a id="login-link" href="/login">Login Test</a>
+            <a id="form-link" href="/form">Form Test</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h2>Welcome</h2>
+
+        <p id="welcome-message">
+            This website was created for Selenium automation practice.
+        </p>
+
+        <section class="card">
+            <h3>Practice Areas</h3>
+
+            <ul id="practice-list">
+                <li>Locating elements</li>
+                <li>Clicking links and buttons</li>
+                <li>Entering text</li>
+                <li>Submitting forms</li>
+                <li>Validating messages</li>
+            </ul>
+        </section>
+
+        <section class="card">
+            <h3>JavaScript Alert</h3>
+
+            <button id="alert-button" type="button">
+                Show Alert
+            </button>
+
+            <p id="alert-result"></p>
+        </section>
+
+        <section class="card">
+            <h3>Delayed Element</h3>
+
+            <button id="delayed-button" type="button">
+                Load Delayed Message
+            </button>
+
+            <p id="delayed-message"></p>
+        </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

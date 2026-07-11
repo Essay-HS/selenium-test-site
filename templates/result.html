@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Form Result</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+</head>
+
+<body>
+    <header>
+        <h1>Form Submission Result</h1>
+
+        <nav>
+            <a href="/">Home</a>
+            <a href="/login">Login Test</a>
+            <a href="/form">Form Test</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section id="submission-result" class="card">
+            <p>
+                <strong>Name:</strong>
+                <span id="result-name">{{ name }}</span>
+            </p>
+
+            <p>
+                <strong>Email:</strong>
+                <span id="result-email">{{ email }}</span>
+            </p>
+
+            <p>
+                <strong>Role:</strong>
+                <span id="result-role">{{ role }}</span>
+            </p>
+
+            <p>
+                <strong>Experience:</strong>
+                <span id="result-experience">{{ experience }}</span>
+            </p>
+
+            <p>
+                <strong>Newsletter:</strong>
+                <span id="result-newsletter">
+                    {{ "Yes" if newsletter else "No" }}
+                </span>
+            </p>
+        </section>
+
+        <a id="return-to-form" href="/form">
+            Return to Form
+        </a>
+    </main>
+</body>
+</html>
