@@ -81,13 +81,23 @@ def wait_for_site(base_url):
     )
 
 
+import os
+
+import pytest
+from selenium import webdriver
+from selenium.webdriver.firefox.options import Options
+
+
 @pytest.fixture
-def driver(wait_for_site):
-    """
-    Create a new Firefox browser for each test and close it afterward.
-    """
-    browser = webdriver.Firefox()
-    browser.set_page_load_timeout(120)
+def driver():
+    options = Options()
+
+    if os.getenv("HEADLESS", "false").lower() == "true":
+        options.add_argument("-headless")
+        options.add_argument("--width=1920")
+        options.add_argument("--height=1080")
+
+    browser = webdriver.Firefox(options=options)
 
     yield browser
 
