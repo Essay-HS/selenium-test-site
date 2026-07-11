@@ -10,6 +10,62 @@ load_dotenv()
 
 app = Flask(__name__)
 
+def mask_name(value):
+    if not value:
+        return "Not provided"
+
+    words = value.split()
+
+    masked_words = []
+
+    for word in words:
+        if len(word) == 1:
+            masked_words.append("*")
+        else:
+            masked_words.append(
+                word[0] + "*" * (len(word) - 1)
+            )
+
+    return " ".join(masked_words)
+
+
+def mask_email(value):
+    if not value or "@" not in value:
+        return "Hidden"
+
+    username, domain = value.split("@", 1)
+
+    domain_parts = domain.split(".")
+
+    if len(username) <= 1:
+        masked_username = "*"
+    else:
+        masked_username = (
+            username[0] + "*" * (len(username) - 1)
+        )
+
+    domain_name = domain_parts[0]
+
+    if len(domain_name) <= 1:
+        masked_domain = "*"
+    else:
+        masked_domain = (
+            domain_name[0] + "*" * (len(domain_name) - 1)
+        )
+
+    domain_extension = ""
+
+    if len(domain_parts) > 1:
+        domain_extension = "." + ".".join(domain_parts[1:])
+
+    return (
+        f"{masked_username}@"
+        f"{masked_domain}"
+        f"{domain_extension}"
+    )
+
+app.jinja_env.filters["mask_name"] = mask_name
+app.jinja_env.filters["mask_email"] = mask_email
 
 def get_database_url() -> str:
     database_url = os.getenv("DATABASE_URL")
