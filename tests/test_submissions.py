@@ -70,11 +70,29 @@ def test_submitted_record_appears_masked(driver, base_url):
 
     table_text = submissions_table.text
 
-    # The full personal values should not appear publicly.
+    # Build the exact masked name that the website should display.
+    expected_masked_name = " ".join(
+        word[0] + "*" * (len(word) - 1)
+        for word in test_name.split()
+    )
+
+    email_username, email_domain = test_email.split("@", 1)
+    domain_name, domain_extension = email_domain.split(".", 1)
+
+    expected_masked_email = (
+        email_username[0]
+        + "*" * (len(email_username) - 1)
+        + "@"
+        + domain_name[0]
+        + "*" * (len(domain_name) - 1)
+        + "."
+        + domain_extension
+    )
+
+    # Private values must never appear on the public page.
     assert test_name not in table_text
     assert test_email not in table_text
 
-    # The masked values should still leave enough information
-    # to recognize that a record exists.
-    assert "S" in table_text
-    assert "@e" in table_text
+    # The exact masked versions must appear.
+    assert expected_masked_name in table_text
+    assert expected_masked_email in table_text
