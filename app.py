@@ -143,6 +143,36 @@ class Submission(db.Model):
         server_default=db.func.current_timestamp(),
     )
 
+class ContactMessage(db.Model):
+    __tablename__ = "contact_messages"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    name = db.Column(
+        db.String(120),
+        nullable=False,
+    )
+
+    email = db.Column(
+        db.String(255),
+        nullable=False,
+    )
+
+    subject = db.Column(
+        db.String(200),
+        nullable=False,
+    )
+
+    message = db.Column(
+        db.Text,
+        nullable=False,
+    )
+
+    created_at = db.Column(
+        db.DateTime,
+        default=db.func.current_timestamp(),
+        nullable=False,
+    )
 
 @app.route("/")
 def home():
@@ -214,6 +244,45 @@ def submissions():
     return render_template(
         "submissions.html",
         submissions=saved_submissions,
+    )
+
+@app.route("/contact", methods=["GET", "POST"])
+def contact():
+    error_message = None
+
+    if request.method == "POST":
+        name = request.form.get("name", "").strip()
+        email = request.form.get("email", "").strip()
+        subject = request.form.get("subject", "").strip()
+        message = request.form.get("message", "").strip()
+
+        if not name:
+            error_message = "Please enter your name."
+        elif not email or "@" not in email:
+            error_message = "Please enter a valid email address."
+        elif not subject:
+            error_message = "Please enter a subject."
+        elif not message:
+            error_message = "Please enter a message."
+        else:
+            contact_message = ContactMessage(
+                name=name,
+                email=email,
+                subject=subject,
+                message=message,
+            )
+
+            db.session.add(contact_message)
+            db.session.commit()
+
+            return render_template(
+                "contact_success.html",
+                name=name,
+            )
+
+    return render_template(
+        "contact.html",
+        error_message=error_message,
     )
 
 with app.app_context():
