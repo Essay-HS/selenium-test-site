@@ -8,7 +8,7 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Form Test</title>
+    <title>Form Test | Selley QA Lab</title>
 
     <link
         rel="stylesheet"
@@ -17,108 +17,134 @@
 </head>
 
 <body>
-    <header>
-        <h1>Form Test</h1>
+    <header class="site-header">
+        <div class="nav-container">
+            <a class="brand" href="/">
+                <span class="brand-mark">S</span>
+                <span class="brand-text">Selley QA Lab</span>
+            </a>
 
-        <nav>
-            <a href="/">Home</a>
-            <a href="/login">Login Test</a>
-            <a href="/form">Form Test</a>
-        </nav>
+            <nav class="main-nav" aria-label="Main navigation">
+                <a href="/">Home</a>
+                <a href="/login">Login Test</a>
+                <a href="/form" class="active">Form Test</a>
+            </nav>
+        </div>
     </header>
 
-    <main class="container">
-        <section class="card">
-            <form id="registration-form" method="post">
-                <div class="form-group">
-                    <label for="name">Name</label>
+    <main class="page-shell">
+        <div class="page-container">
+            <div class="page-header">
+                <p class="eyebrow">Form Automation</p>
 
-                    <input
-                        id="name"
-                        name="name"
-                        type="text"
-                        required
-                    >
-                </div>
+                <h1>Registration workflow</h1>
 
-                <div class="form-group">
-                    <label for="email">Email</label>
+                <p>
+                    Practice text entry, dropdown selection, radio buttons,
+                    checkboxes, and form submission.
+                </p>
+            </div>
 
-                    <input
-                        id="email"
-                        name="email"
-                        type="email"
-                        required
-                    >
-                </div>
+            <section class="form-card">
+                <form id="registration-form" method="post">
+                    <div class="form-group">
+                        <label for="name">Full name</label>
 
-                <div class="form-group">
-                    <label for="role">Career Role</label>
-
-                    <select id="role" name="role" required>
-                        <option value="">Select a role</option>
-                        <option value="QA Analyst">QA Analyst</option>
-                        <option value="Database Administrator">
-                            Database Administrator
-                        </option>
-                        <option value="Application Support">
-                            Application Support
-                        </option>
-                    </select>
-                </div>
-
-                <fieldset>
-                    <legend>Experience Level</legend>
-
-                    <label>
                         <input
-                            id="beginner"
-                            name="experience"
-                            type="radio"
-                            value="Beginner"
+                            id="name"
+                            name="name"
+                            type="text"
+                            autocomplete="name"
                             required
                         >
-                        Beginner
-                    </label>
+                    </div>
 
-                    <label>
+                    <div class="form-group">
+                        <label for="email">Email address</label>
+
                         <input
-                            id="intermediate"
-                            name="experience"
-                            type="radio"
-                            value="Intermediate"
+                            id="email"
+                            name="email"
+                            type="email"
+                            autocomplete="email"
+                            required
                         >
-                        Intermediate
-                    </label>
+                    </div>
 
-                    <label>
-                        <input
-                            id="advanced"
-                            name="experience"
-                            type="radio"
-                            value="Advanced"
-                        >
-                        Advanced
-                    </label>
-                </fieldset>
+                    <div class="form-group">
+                        <label for="role">Career role</label>
 
-                <div class="form-group">
-                    <label>
-                        <input
-                            id="newsletter"
-                            name="newsletter"
-                            type="checkbox"
-                            value="yes"
-                        >
-                        Subscribe to the test newsletter
-                    </label>
-                </div>
+                        <select id="role" name="role" required>
+                            <option value="">Select a role</option>
+                            <option value="QA Analyst">QA Analyst</option>
+                            <option value="Database Administrator">
+                                Database Administrator
+                            </option>
+                            <option value="Application Support">
+                                Application Support
+                            </option>
+                        </select>
+                    </div>
 
-                <button id="submit-button" type="submit">
-                    Submit Form
-                </button>
-            </form>
-        </section>
+                    <fieldset>
+                        <legend>Experience level</legend>
+
+                        <div class="choice-group">
+                            <label class="choice-label">
+                                <input
+                                    id="beginner"
+                                    name="experience"
+                                    type="radio"
+                                    value="Beginner"
+                                    required
+                                >
+                                Beginner
+                            </label>
+
+                            <label class="choice-label">
+                                <input
+                                    id="intermediate"
+                                    name="experience"
+                                    type="radio"
+                                    value="Intermediate"
+                                >
+                                Intermediate
+                            </label>
+
+                            <label class="choice-label">
+                                <input
+                                    id="advanced"
+                                    name="experience"
+                                    type="radio"
+                                    value="Advanced"
+                                >
+                                Advanced
+                            </label>
+                        </div>
+                    </fieldset>
+
+                    <div class="form-group">
+                        <label class="choice-label">
+                            <input
+                                id="newsletter"
+                                name="newsletter"
+                                type="checkbox"
+                                value="yes"
+                            >
+                            Subscribe to automation updates
+                        </label>
+                    </div>
+
+                    <button
+                        id="submit-button"
+                        class="button button-primary"
+                        type="submit"
+                    >
+                        Submit Form
+                    </button>
+                </form>
+            </section>
+        </div>
     </main>
 </body>
 </html>

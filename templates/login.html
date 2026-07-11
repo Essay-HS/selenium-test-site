@@ -8,7 +8,7 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Login Test</title>
+    <title>Login Test | Selley QA Lab</title>
 
     <link
         rel="stylesheet"
@@ -17,62 +17,86 @@
 </head>
 
 <body>
-    <header>
-        <h1>Login Test</h1>
+    <header class="site-header">
+        <div class="nav-container">
+            <a class="brand" href="/">
+                <span class="brand-mark">S</span>
+                <span class="brand-text">Selley QA Lab</span>
+            </a>
 
-        <nav>
-            <a href="/">Home</a>
-            <a href="/login">Login Test</a>
-            <a href="/form">Form Test</a>
-        </nav>
+            <nav class="main-nav" aria-label="Main navigation">
+                <a href="/">Home</a>
+                <a href="/login" class="active">Login Test</a>
+                <a href="/form">Form Test</a>
+            </nav>
+        </div>
     </header>
 
-    <main class="container">
-        <section class="card">
-            <form id="login-form" method="post">
-                <div class="form-group">
-                    <label for="username">Username</label>
+    <main class="page-shell">
+        <div class="page-container">
+            <div class="page-header">
+                <p class="eyebrow">Authentication Testing</p>
 
-                    <input
-                        id="username"
-                        name="username"
-                        type="text"
-                        required
-                    >
-                </div>
+                <h1>Login validation</h1>
 
-                <div class="form-group">
-                    <label for="password">Password</label>
-
-                    <input
-                        id="password"
-                        name="password"
-                        type="password"
-                        required
-                    >
-                </div>
-
-                <button id="login-button" type="submit">
-                    Log In
-                </button>
-            </form>
-
-            {% if message %}
-                <p
-                    id="login-message"
-                    class="{{ message_type }}"
-                >
-                    {{ message }}
+                <p>
+                    Practice valid and invalid login scenarios using
+                    Selenium WebDriver.
                 </p>
-            {% endif %}
-        </section>
+            </div>
 
-        <section class="card">
-            <h2>Practice Credentials</h2>
+            <section class="form-card">
+                <form id="login-form" method="post">
+                    <div class="form-group">
+                        <label for="username">Username</label>
 
-            <p>Username: testuser</p>
-            <p>Password: Password123</p>
-        </section>
+                        <input
+                            id="username"
+                            name="username"
+                            type="text"
+                            autocomplete="username"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+
+                        <input
+                            id="password"
+                            name="password"
+                            type="password"
+                            autocomplete="current-password"
+                            required
+                        >
+                    </div>
+
+                    <button
+                        id="login-button"
+                        class="button button-primary"
+                        type="submit"
+                    >
+                        Sign In
+                    </button>
+                </form>
+
+                {% if message %}
+                    <p
+                        id="login-message"
+                        class="{{ message_type }}"
+                        aria-live="polite"
+                    >
+                        {{ message }}
+                    </p>
+                {% endif %}
+
+                <div class="credentials-card">
+                    <h2>Practice credentials</h2>
+                    <p>Username: testuser</p>
+                    <p>Password: Password123</p>
+                </div>
+            </section>
+        </div>
     </main>
 </body>
 </html>
