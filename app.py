@@ -5,10 +5,15 @@ from dotenv import load_dotenv
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 
+import resend
+import html
 
 load_dotenv()
 
+resend.api_key = os.getenv("RESEND_API_KEY")
+
 app = Flask(__name__)
+
 
 def mask_name(value):
     if not value:
@@ -22,9 +27,7 @@ def mask_name(value):
         if len(word) == 1:
             masked_words.append("*")
         else:
-            masked_words.append(
-                word[0] + "*" * (len(word) - 1)
-            )
+            masked_words.append(word[0] + "*" * (len(word) - 1))
 
     return " ".join(masked_words)
 
@@ -40,32 +43,26 @@ def mask_email(value):
     if len(username) <= 1:
         masked_username = "*"
     else:
-        masked_username = (
-            username[0] + "*" * (len(username) - 1)
-        )
+        masked_username = username[0] + "*" * (len(username) - 1)
 
     domain_name = domain_parts[0]
 
     if len(domain_name) <= 1:
         masked_domain = "*"
     else:
-        masked_domain = (
-            domain_name[0] + "*" * (len(domain_name) - 1)
-        )
+        masked_domain = domain_name[0] + "*" * (len(domain_name) - 1)
 
     domain_extension = ""
 
     if len(domain_parts) > 1:
         domain_extension = "." + ".".join(domain_parts[1:])
 
-    return (
-        f"{masked_username}@"
-        f"{masked_domain}"
-        f"{domain_extension}"
-    )
+    return f"{masked_username}@" f"{masked_domain}" f"{domain_extension}"
+
 
 app.jinja_env.filters["mask_name"] = mask_name
 app.jinja_env.filters["mask_email"] = mask_email
+
 
 def get_database_url() -> str:
     database_url = os.getenv("DATABASE_URL")
@@ -143,6 +140,7 @@ class Submission(db.Model):
         server_default=db.func.current_timestamp(),
     )
 
+
 class ContactMessage(db.Model):
     __tablename__ = "contact_messages"
 
@@ -173,6 +171,7 @@ class ContactMessage(db.Model):
         default=db.func.current_timestamp(),
         nullable=False,
     )
+
 
 @app.route("/")
 def home():
@@ -233,18 +232,16 @@ def form():
 
     return render_template("form.html")
 
+
 @app.route("/submissions")
 def submissions():
-    saved_submissions = (
-        Submission.query
-        .order_by(Submission.created_at.desc())
-        .all()
-    )
+    saved_submissions = Submission.query.order_by(Submission.created_at.desc()).all()
 
     return render_template(
         "submissions.html",
         submissions=saved_submissions,
     )
+
 
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
@@ -275,6 +272,63 @@ def contact():
             db.session.add(contact_message)
             db.session.commit()
 
+            recipient_email = os.getenv("CONTACT_TO_EMAIL")
+            sender_email = os.getenv("CONTACT_FROM_EMAIL")
+
+            try:
+                if not resend.api_key:
+                    app.logger.warning(
+                        "Contact message saved, but RESEND_API_KEY is missing."
+                    )
+                elif not recipient_email:
+                    app.logger.warning(
+                        "Contact message saved, but CONTACT_TO_EMAIL is missing."
+                    )
+                elif not sender_email:
+                    app.logger.warning(
+                        "Contact message saved, but CONTACT_FROM_EMAIL is missing."
+                    )
+                else:
+                    resend.Emails.send(
+                        {
+                            "from": sender_email,
+                            "to": [recipient_email],
+                            "reply_to": email,
+                            "subject": f"New website message: {subject}",
+                            "html": f"""
+                                <h2>New contact message</h2>
+
+                                <p>
+                                    <strong>Name:</strong>
+                                    {html.escape(name)}
+                                </p>
+
+                                <p>
+                                    <strong>Email:</strong>
+                                    {html.escape(email)}
+                                </p>
+
+                                <p>
+                                    <strong>Subject:</strong>
+                                    {html.escape(subject)}
+                                </p>
+
+                                <p><strong>Message:</strong></p>
+
+                                <p>
+                                    {html.escape(message).replace(chr(10), "<br>")}
+                                </p>
+                            """,
+                        }
+                    )
+
+                    app.logger.info("Contact notification email sent.")
+
+            except Exception:
+                app.logger.exception(
+                    "Contact message saved, but email notification failed."
+                )
+
             return render_template(
                 "contact_success.html",
                 name=name,
@@ -284,6 +338,7 @@ def contact():
         "contact.html",
         error_message=error_message,
     )
+
 
 with app.app_context():
     db.create_all()
