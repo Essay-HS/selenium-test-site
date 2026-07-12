@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver.common.by import By
 
-
+@pytest.mark.smoke
 def test_successful_login(driver, base_url):
     driver.get(f"{base_url}/login")
 

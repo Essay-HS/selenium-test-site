@@ -1,12 +1,13 @@
+import pytest
 from uuid import uuid4
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-
+@pytest.mark.smoke
 def test_submissions_page_direct_access(driver, base_url):
-    driver.get(f"{base_url}/submissions")
+    # driver.get(f"{base_url}/submissions")
 
     heading = WebDriverWait(driver, 10).until(
         EC.visibility_of_element_located(

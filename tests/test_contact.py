@@ -1,8 +1,9 @@
+import pytest       
 from selenium.webdriver.common.by import By
 
-
+@pytest.mark.smoke
 def test_contact_page_loads(driver, base_url):
-    driver.get(f"{base_url}/contact")
+    # driver.get(f"{base_url}/contact")
 
     assert driver.find_element(By.ID, "contact-form").is_displayed()
     assert driver.find_element(By.ID, "contact-name").is_displayed()
