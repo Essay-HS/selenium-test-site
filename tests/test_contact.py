@@ -1,11 +1,20 @@
 import pytest       
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+
 
 @pytest.mark.smoke
 def test_contact_page_loads(driver, base_url):
-    # driver.get(f"{base_url}/contact")
+    driver.get(f"{base_url}/contact")
 
-    assert driver.find_element(By.ID, "contact-form").is_displayed()
+    contact_form = WebDriverWait(driver, 30).until(
+        EC.visibility_of_element_located(
+            (By.ID, "contact-form")
+        )
+    )
+
+    assert contact_form.is_displayed()
     assert driver.find_element(By.ID, "contact-name").is_displayed()
     assert driver.find_element(By.ID, "contact-email").is_displayed()
     assert driver.find_element(By.ID, "contact-subject").is_displayed()

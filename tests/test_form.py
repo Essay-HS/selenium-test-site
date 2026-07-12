@@ -1,7 +1,9 @@
+import pytest
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 
-
+@pytest.mark.smoke
 def test_form_submission(driver, base_url):
     driver.get(f"{base_url}/form")
 

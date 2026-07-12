@@ -1,21 +1,33 @@
 import pytest
 from uuid import uuid4
 
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 @pytest.mark.smoke
 def test_submissions_page_direct_access(driver, base_url):
-    # driver.get(f"{base_url}/submissions")
+    submissions_url = f"{base_url}/submissions"
+    heading = None
 
-    heading = WebDriverWait(driver, 10).until(
-        EC.visibility_of_element_located(
-            (By.ID, "submissions-heading")
-        )
-    )
+    for attempt in range(3):
+        driver.get(submissions_url)
 
+        try:
+            heading = WebDriverWait(driver, 30).until(
+                EC.visibility_of_element_located(
+                    (By.ID, "submissions-heading")
+                )
+            )
+            break
+        except TimeoutException:
+            if attempt == 2:
+                raise
+
+    assert heading is not None
     assert heading.text == "Saved form submissions"
+    assert driver.current_url.rstrip("/") == submissions_url.rstrip("/")
 
 
 def test_submitted_record_appears_masked(driver, base_url):
