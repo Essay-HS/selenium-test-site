@@ -2,13 +2,6 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main',
-                    url: 'https://github.com/Essay-HS/selenium-test-site.git'
-            }
-        }
-
         stage('Prepare Python') {
             steps {
                 sh '''
@@ -55,81 +48,92 @@ pipeline {
             steps {
                 sh '''
                     mkdir -p test-results
+
                     HEADLESS=true .venv/bin/python -m pytest -v \
                         --junitxml=test-results/results.xml
                 '''
             }
-
-            post {
-    always {
-        script {
-            def reportFile = 'test-results/results.xml'
-
-            if (fileExists(reportFile)) {
-                def results = readFile(reportFile)
-
-                def tests = (results =~ /tests="(\d+)"/)[0][1].toInteger()
-                def failures = (results =~ /failures="(\d+)"/)[0][1].toInteger()
-                def errors = (results =~ /errors="(\d+)"/)[0][1].toInteger()
-                def skipped = (results =~ /skipped="(\d+)"/)[0][1].toInteger()
-
-                env.PASSED_TESTS =
-                    (tests - failures - errors - skipped).toString()
-
-                env.FAILED_TESTS =
-                    (failures + errors).toString()
-            } else {
-                env.PASSED_TESTS = '0'
-                env.FAILED_TESTS = '0'
-            }
-
-            env.BRANCH_NAME = 'main'
-
-            env.GIT_COMMIT = sh(
-                script: 'git rev-parse HEAD',
-                returnStdout: true
-            ).trim()
-
-            def jenkinsStatus = currentBuild.currentResult ?: 'SUCCESS'
-
-            env.RELEASEGUARD_STATUS =
-                jenkinsStatus == 'FAILURE' ? 'FAILED' : jenkinsStatus
-        }
-
-        withCredentials([
-            string(
-                credentialsId: 'releaseguard-api-token',
-                variable: 'BUILD_API_TOKEN'
-            )
-        ]) {
-            sh '''
-                export RELEASEGUARD_URL=http://127.0.0.1:5001
-
-                /Users/ac/Projects/releaseguard/.venv/bin/python \
-                    /Users/ac/Projects/releaseguard/scripts/record_build.py \
-                    "$RELEASEGUARD_STATUS"
-            '''
-        }
-
-        sh '''
-            if [ -f flask.pid ]; then
-                kill $(cat flask.pid) 2>/dev/null || true
-                rm -f flask.pid
-            fi
-        '''
-    }
-}
         }
     }
 
     post {
         always {
-            sh '''
-                if [ -f flask.pid ]; then
-                    kill $(cat flask.pid) 2>/dev/null || true
-                    rm -f flask.pid
-                fi
-            '''
+            junit testResults: 'test-results/results.xml',
+                  allowEmptyResults: true
+
+            script {
+                try {
+                    def reportFile = 'test-results/results.xml'
+
+                    if (fileExists(reportFile)) {
+                        def results = readFile(reportFile)
+
+                        def tests =
+                            (results =~ /tests="(\d+)"/)[0][1].toInteger()
+
+                        def failures =
+                            (results =~ /failures="(\d+)"/)[0][1].toInteger()
+
+                        def errors =
+                            (results =~ /errors="(\d+)"/)[0][1].toInteger()
+
+                        def skipped =
+                            (results =~ /skipped="(\d+)"/)[0][1].toInteger()
+
+                        env.PASSED_TESTS =
+                            (tests - failures - errors - skipped).toString()
+
+                        env.FAILED_TESTS =
+                            (failures + errors).toString()
+                    } else {
+                        env.PASSED_TESTS = '0'
+                        env.FAILED_TESTS = '0'
+                    }
+
+                    env.BRANCH_NAME = 'main'
+
+                    env.GIT_COMMIT = sh(
+                        script: 'git rev-parse HEAD 2>/dev/null || echo unknown',
+                        returnStdout: true
+                    ).trim()
+
+                    def jenkinsStatus =
+                        currentBuild.currentResult ?: 'SUCCESS'
+
+                    env.RELEASEGUARD_STATUS =
+                        jenkinsStatus == 'FAILURE'
+                            ? 'FAILED'
+                            : jenkinsStatus
+
+                    try {
+                        withCredentials([
+                            string(
+                                credentialsId: 'releaseguard-api-token',
+                                variable: 'BUILD_API_TOKEN'
+                            )
+                        ]) {
+                            sh '''
+                                export RELEASEGUARD_URL=http://127.0.0.1:5001
+
+                                /Users/ac/Projects/releaseguard/.venv/bin/python \
+                                    /Users/ac/Projects/releaseguard/scripts/record_build.py \
+                                    "$RELEASEGUARD_STATUS"
+                            '''
+                        }
+                    } catch (Exception error) {
+                        echo 'WARNING: ReleaseGuard reporting failed.'
+                        echo 'The original Jenkins build result will be preserved.'
+                        echo "Reporting error: ${error.getMessage()}"
+                    }
+                } finally {
+                    sh '''
+                        if [ -f flask.pid ]; then
+                            kill $(cat flask.pid) 2>/dev/null || true
+                            rm -f flask.pid
+                        fi
+                    '''
+                }
+            }
         }
     }
 }
