@@ -1,7 +1,9 @@
 import pytest
 from selenium.webdriver.common.by import By
 
+
 @pytest.mark.smoke
+@pytest.mark.regression
 def test_successful_login(driver, base_url):
     driver.get(f"{base_url}/login")
 
@@ -18,6 +20,7 @@ def test_successful_login(driver, base_url):
     assert message.text == "Login successful"
 
 
+@pytest.mark.regression
 @pytest.mark.parametrize(
     "username,password",
     [
@@ -49,6 +52,7 @@ def test_invalid_login_attempts(
     assert message.text == "Invalid username or password"
 
 
+@pytest.mark.regression
 def test_password_field_hides_typed_text(driver, base_url):
     driver.get(f"{base_url}/login")
 
