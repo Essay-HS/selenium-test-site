@@ -125,6 +125,47 @@ pipeline {
                         echo 'The original Jenkins build result will be preserved.'
                         echo "Reporting error: ${error.getMessage()}"
                     }
+                    if (
+                        env.RELEASEGUARD_STATUS in [
+                            'FAILED',
+                            'UNSTABLE',
+                            'ABORTED'
+                        ]
+                    ) {
+                        try {
+                            withCredentials([
+                                string(
+                                    credentialsId: 'TWILIO_ACCOUNT_SID',
+                                    variable: 'TWILIO_ACCOUNT_SID'
+                                ),
+                                string(
+                                    credentialsId: 'TWILIO_AUTH_TOKEN',
+                                    variable: 'TWILIO_AUTH_TOKEN'
+                                ),
+                                string(
+                                    credentialsId: 'TWILIO_PHONE_NUMBER',
+                                    variable: 'TWILIO_PHONE_NUMBER'
+                                ),
+                                string(
+                                    credentialsId: 'ALERT_PHONE_NUMBER',
+                                    variable: 'ALERT_PHONE_NUMBER'
+                                )
+                            ]) {
+                                sh '''
+                                    /Users/ac/Projects/releaseguard/.venv/bin/python \
+                                        /Users/ac/Projects/releaseguard/scripts/send_twilio_alert.py \
+                                        "$RELEASEGUARD_STATUS"
+                                '''
+                            }
+                        } catch (Exception error) {
+                            echo 'WARNING: Twilio alert failed.'
+                            echo 'The Jenkins build result will be preserved.'
+                            echo "Twilio error: ${error.getMessage()}"
+                        }
+                    } else {
+                        echo 'Build succeeded. No Twilio alert is required.'
+                    }
+
                 } finally {
                     sh '''
                         if [ -f flask.pid ]; then
