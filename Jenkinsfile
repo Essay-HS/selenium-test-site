@@ -135,11 +135,11 @@ pipeline {
                         try {
                             withCredentials([
                                 string(
-                                    credentialsId: 'TWILIO_ACCOUNT_SID',
+                                    credentialsId: 'twilio-live-account-sid',
                                     variable: 'TWILIO_ACCOUNT_SID'
                                 ),
                                 string(
-                                    credentialsId: 'TWILIO_AUTH_TOKEN',
+                                    credentialsId: 'twilio-live-auth-token',
                                     variable: 'TWILIO_AUTH_TOKEN'
                                 ),
                                 string(
