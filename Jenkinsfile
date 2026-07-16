@@ -152,6 +152,9 @@ pipeline {
                                 )
                             ]) {
                                 sh '''
+
+                                    export TWILIO_TRIAL_MODE=true
+
                                     /Users/ac/Projects/releaseguard/.venv/bin/python \
                                         /Users/ac/Projects/releaseguard/scripts/send_twilio_alert.py \
                                         "$RELEASEGUARD_STATUS"
